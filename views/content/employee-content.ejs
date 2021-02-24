@@ -1,0 +1,163 @@
+<!--EMPLOYEE VIEW STARTS HERE -->
+<!--complete logic for employee view-->
+<% if (title == 'Create Employee') { %>
+    <div class="col-sm-8" id="button" >
+        <div>
+            <form action="" method="post">
+              First Name:<br>
+              <input type="text" id="button" name="first_name" placeholder="First Name">
+              <br>
+              Last Name:<br>
+              <input type="text" id="button" name="last_name" placeholder="Last Name">
+              <br>
+              Username:<br>
+              <input type="text" id="button" name="username" placeholder="Username">
+              <br>
+              Email:<br>
+              <input type="text" id="button" name="email" placeholder="email@email.com">
+              <br>
+              Password:<br>
+              <input type="text" id="button" name="password" placeholder="password">
+              <br><br>
+              <input type="submit" id="button" value="Create Employee">
+            </form>
+        </div>
+    </div>
+
+<% } else if (title == 'Delete Employee') { %>
+
+<% } else if (title == 'Update Employee') { %>
+    <div class="col-sm-8">
+        <div class="">
+            <form action=""/employee/<%= employee.id %>/update"" method="post">
+              First Name:<br>
+              <input type="text" id="button" name="first_name" value="<%= employee.first_name %>">
+              <br>
+              Last Name:<br>
+              <input type="text" id="button" name="last_name" value="<%= employee.last_name %>">
+              <br>
+              Username:<br>
+              <input type="text" id="button" name="username" value="<%= employee.username %>">
+              <br><br>
+              <input type="submit" id="button" value="Update Employee">
+            </form>
+        </div>
+    </div>
+
+<% } else if (title == 'Employee Details') { %>
+    <div class="col-sm-8">
+        <div class="">
+             <h1>Details of a Single Employee</h1>
+             <p>I am an employee with this ID = <%= employee.id %></p>
+             <p>First Name: <%= employee.first_name %></p>
+             <p>Last Name:  <%= employee.last_name %></p>
+             <a href="/employee/<%= employee.id %>/update">Edit  Employee</a> | <a href="/employee/<%= employee.id %>/delete">Delete Employee</a>
+             
+        <% if(employee.Documents.length == 0) { %>
+            <h2>There are no documents by this employee yet </h2>
+        <% } else { %>
+            <h2>All Documents by this Employee</h2>
+            <div class="">
+                <ol>
+                <% employee.Documents.forEach(function(document) { %>
+                        <li>
+                            <p> 
+                                <a href="/document/<%= document.id %>"><%= document.subject %></a>
+                                    <br/>
+                                <%= document.description %>
+                                    <br/>
+                                <%= document.status %>
+                                <br/> <a href="/document/<%= document.id %>/update">Edit  Document</a> | <a href="/document/<%= document.id %>/delete">Delete Document</a>
+                            </p>
+                        </li>
+                    <br/>
+                <% }); %>
+                </ol>
+            </div>    
+            <% } %>   
+        </div>
+        
+        <h2>Create new document for this employee </h2>
+        <!--DISPLAY CREATE FORM IN EMPLOYEE-->
+        
+        <!--YOU CAN ALSO MOVE THIS TO ANY ROUTE IF YOU WANT-->
+        
+        <form action="/document/create" method="post">
+                Subject:<br>
+                <input type="text" id="button" name="subject" placeholder="Subject">
+                <br><br/>
+                Description:<br>
+                <textarea type="text" id="button" rows="4" cols="50" name="description" placeholder="Description"></textarea>
+                <br><br>
+                Status:<br>
+                <input type="text" id="button" name="status" placeholder="status">
+                <br><br>
+                
+                <!--I DONT NEED TO LIST EMPLOYEES AGAIN - BECAUSE I AM ON A SINGLE EMPLOYEE PAGE, I WILL -->
+                <!--PASS THE EMPLOYEE ID AUTOMATICALLY WITH FORM INPUTS USING THE HIDDEN FIELD -->
+                <!--Employee:<br>-->
+                <!-- <select name = "employee_id">-->
+                <!--      <#% employees.forEach(function(employee) { %>-->
+                <!--      <option  value="<#%= employee.id %>"><#%= employee.first_name %></option>-->
+                <!--  <br/>-->
+                <!-- <#% }); %>-->
+                <!--  </select>-->
+                Type:<br>
+                <% types.forEach(function(type) { %>
+                <input type="radio" id="button" name="type_id" value="<%= type.id %>"> <%= type.type_name %>
+                <br/>
+               <% }); %>
+                </select>
+                <br><br>
+                <input type="hidden" id="button" name="employee_id" value="<%= employee.id %>">
+                Category:<br>
+                <select name = "category_id" id="button">
+                    <% categories.forEach(function(category) { %>
+                    <option  value="<%= category.id %>"><%= category.name %></option>  
+                <br/>
+                <% }); %>
+                </select>
+              <br><br>
+                <input type="submit" id="button" value="Create Document" onClick="checkCat()">
+                </form>
+    </div>
+
+<% } else if (title == 'Employee List') { %>
+    <div class="col-sm-8">
+        <div class="">
+            <ol>
+            <% employees.forEach(function(employee) { %>
+            <% console.log(employees) %>
+                    <li>
+                        <h4><a href="/employee/<%= employee.id %>"><%= employee.first_name %></a></h4>
+                        <p><%= employee.last_name %></p>
+                        <p><%= employee.username %></p>
+                        <p><%= employee.email %></p>
+                         <a href="/employee/<%= employee.id %>/update">Edit  Employee</a> | <a href="/employee/<%= employee.id %>/delete">Delete Employee</a>
+                    </li>
+                <br/>
+            <% }); %>
+            </ol>
+        </div>
+        <a href="/employee/create"> CLICK HERE TO CREATE EMPLOYEE</a>
+    </div>
+<% } else { %>
+
+<% } %>
+<!--EMPLOYEE VIEW END HERE-->
+<script>
+    function checkCat() {
+    var checkBoxes = document.getElementsByClassName( 'categoryCheckbox' );
+    var isChecked = false;
+    for (var i = 0; i < checkBoxes.length; i++) {
+        if ( checkBoxes[i].checked ) {
+            isChecked = true;
+        };
+    };
+    if ( isChecked ) {
+        
+        } else {
+            alert( 'Please, check at least one checkbox!' );
+        }   
+}
+</script>

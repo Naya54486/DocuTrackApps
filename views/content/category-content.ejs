@@ -1,0 +1,76 @@
+<!--CATEGORY VIEW START HERE-->
+<!--complete logic for category view-->
+<% if (title == 'Create Category') { %>
+    <div class="col-sm-8">    
+        <div>
+            <form action="" method="post">
+              Category Name:<br>
+              <input type="text" id="button" name="name" placeholder="Category Name">
+              <br><br>
+              <input type="submit" id="button" value="Create Category">
+            </form>
+        </div>
+    </div>
+<% } else if (title == 'Delete Category') { %>
+     
+<% } else if (title == 'Update Category') { %>
+    <div class="col-sm-8">    
+        <div>
+            <form action="/category/<%= category.id %>/update" method="post">
+               Category Name:<br>
+              <input type="text" id="button" name="name" value="<%= category.name %>">
+              <br><br>
+              <input type="submit" id="button" value="Update Category">
+            </form>
+        </div>
+    </div>
+<% } else if (title == 'Category Details') { %>
+    <div class="col-sm-8">    
+        <div class="">
+             <h1>Details of a Single category - <%= category.name %></h1>
+             <p>I am an category for this ID = <%= category.id %></p>
+             <p>Category Name: <%= category.name %></p>
+             <a href="/category/<%= category.id %>/update">Edit  Category</a> | <a href="/category/<%= category.id %>/delete">Delete Category</a>
+        </div>
+        
+        <% if(category.documents.length == 0) { %>
+            <h2>There are no documents under this category yet </h2>
+        <% } else { %>
+            <h2>All Documents in this Category</h2>
+            <div class="">
+                <ol>
+                <% category.documents.forEach(function(document) { %>
+                        <li>
+                            <p><%= document.subject %>
+                               <%= document.description %>
+                               <%= document.status %>
+                                <br/><a href="/document/<%= document.id %>/update">Edit  Document</a> | <a href="/document/<%= document.id %>/delete">Delete Document</a>
+                            </p>
+                        </li>
+                    <br/>
+                <% }); %>
+                </ol>
+            </div>    
+         <% } %>  
+    </div>
+<% } else if (title == 'Category List') { %>
+    <div class="col-sm-8">    
+        <div class="">
+        <ol>
+        <% categories.forEach(function(category) { %>
+                <li>
+                    <h4><a href="/category/<%= category.id %>"><%= category.name %></a></h4>
+                    <p>The main body of the category <%= category.name %></p>
+                     <a href="/category/<%= category.id %>/update">Edit  Category</a> | <a href="/category/<%= category.id %>/delete">Delete Category</a>
+                </li>
+            <br/>
+        <% }); %>
+        </ol>
+    </div>
+        <a href="/category/create"> CLICK HERE TO CREATE CATEGORY</a>
+
+    </div>
+<% } else { %>
+
+<% } %>
+<!--CATEGORY VIEW END HERE-->

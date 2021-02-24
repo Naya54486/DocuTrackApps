@@ -1,0 +1,127 @@
+<!--APPLICATION VIEW STARTS HERE -->
+<!--complete logic for application view-->
+<% if (title == 'Create Application') { %>
+    <div class="col-sm-8">
+        <div>
+            <form action="" method="post">
+              App Name:<br>
+              <input type="text" id="button" name="app_type" placeholder="App Name">
+              <br><br>
+              <input type="submit" id="button" value="Create Application">
+            </form>
+        </div>
+    </div>
+
+<% } else if (title == 'Delete Application') { %>
+
+<% } else if (title == 'Update Application') { %>
+    <div class="col-sm-8">
+        <div>
+            <form action=""/application/<%= application.id %>/update"" method="post">
+              App Name:<br>
+              <input type="text" id="button" name="app_type" value="<%= application.app_name %>">
+              <br><br>
+              <input type="submit" id="button" value="Update App">
+            </form>
+        </div>
+    </div>
+
+<% } else if (title == 'Application Details') { %>
+    <div class="col-sm-8">
+        <div class="">
+             <h1>Details of a Single Application</h1>
+             <p>I am a application with this ID = <%= application.id %></p>
+             <p>App Name: <%= application.app_type %></p>
+             <a href="/application/<%= application.id %>/update">Edit  Application</a> | <a href="/application/<%= application.id %>/delete">Delete Application</a>
+             
+        <% if(application.Documents.length == 0) { %>
+            <h2>There are no documents for this app yet </h2>
+        <% } else { %>
+            <h2>All Documents for this Application</h2>
+            <div class="">
+                <ol>
+                <% application.Documents.forEach(function(document) { %>
+                        <li>
+                            <p> 
+                                <a href="/document/<%= document.id %>"><%= document.subject %></a>
+                                    <br/>
+                                <%= document.description %>
+                                    <br/>
+                                <%= document.status %>
+                                <br/> <a href="/document/<%= document.id %>/update">Edit  Document</a> | <a href="/document/<%= document.id %>/delete">Delete Document</a>
+                            </p>
+                        </li>
+                    <br/>
+                <% }); %>
+                </ol>
+            </div>    
+            <% } %>   
+        </div>
+        
+        <h2>Create new document for this application </h2>
+        <!--DISPLAY CREATE FORM IN APPLICATION-->
+        
+        <!--YOU CAN ALSO MOVE THIS TO ANY ROUTE IF YOU WANT-->
+        
+        <form action="/document/create" method="post">
+                Subject:<br>
+                <input type="text" id="button" name="subject" placeholder="Subject">
+                <br><br/>
+                Description:<br>
+                <input type="text" id="button" name="description" placeholder="Description">
+                <br><br>
+                Status:<br>
+                <input type="text" id="button" name="status" placeholder="status">
+                <br><br>
+
+
+
+                <input type="hidden" id="button" name="application_id" value="<%= application.id %>">
+                Category:<br>
+                <select name = "category_id" id="button">
+                    <% categories.forEach(function(category) { %>
+                    <option  value="<%= category.id %>"><%= category.name %></option>  
+                <br/>
+                <% }); %>
+                </select>
+                <br><br>
+                <input type="submit" id="button" value="Create Document" onClick="checkCat()">
+                </form>
+    </div>
+
+<% } else if (title == 'Application List') { %>
+    <div class="col-sm-8">
+        <div class="">
+            <ol>
+            <% applications.forEach(function(application) { %>
+            <% console.log(applications) %>
+                    <li>
+                        <h4><a href="/application/<%= application.id %>"><%= application.app_type %></a></h4>
+                         <a href="/application/<%= application.id %>/update">Edit  Application</a> | <a href="/application/<%= application.id %>/delete">Delete application</a>
+                    </li>
+                <br/>
+            <% }); %>
+            </ol>
+        </div>
+        <a href="/application/create"> CLICK HERE TO CREATE AN APPLICATION</a>
+    </div>
+<% } else { %>
+
+<% } %>
+<!--APP VIEW END HERE-->
+<script>
+    function checkCat() {
+    var checkBoxes = document.getElementsByClassName( 'categoryCheckbox' );
+    var isChecked = false;
+    for (var i = 0; i < checkBoxes.length; i++) {
+        if ( checkBoxes[i].checked ) {
+            isChecked = true;
+        };
+    };
+    if ( isChecked ) {
+        
+        } else {
+            alert( 'Please, check at least one checkbox!' );
+        }   
+}
+</script>

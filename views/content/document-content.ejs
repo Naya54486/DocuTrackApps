@@ -1,0 +1,164 @@
+<!--DOCUMENT VIEW STARTS HERE -->
+<% if (title == 'Create Document') { %>
+    <div class="col-sm-8" >    
+        <div class>
+            <form action="" method="post" >
+              Subject:<br>
+              <input type="text" name="subject" placeholder="Subject" id="button">
+              <br><br>
+              Description:<br>
+              <textarea type="text" rows="4" cols="50" name="description" placeholder="Description" id="button"></textarea>
+              <br><br>
+              <!-- Status:<br>
+              <input type="text" name="status" placeholder="Status">
+              <br><br> -->
+            Employee:<br>
+                <select name = "employee_id" id="button">
+                    <% employees.forEach(function(employee) { %>
+                    <option  value="<%= employee.id %>"><%= employee.first_name %></option>
+                <br/>
+                <% }); %>
+                </select>
+            <br><br>
+            Application:<br>
+                <select name = "application_id" id="button">
+                    <% applications.forEach(function(application) { %>
+                    <option  value="<%= application.id %>"><%= application.app_type %></option>
+                <br/>
+                <% }); %>
+                </select>
+            <br><br>
+            Type:<br>
+                <% types.forEach(function(type) { %>
+                <input type="radio"  name="type_id" value="<%= type.id %>"> <%= type.type_name %>
+                <br/>
+               <% }); %>
+            <br><br>
+            Category:<br>
+                <select name = "category_id" id="button">
+                    <% categories.forEach(function(category) { %>
+                    <option  value="<%= category.id %>"><%= category.name %></option>  
+                <br/>
+                <% }); %>
+                </select>
+              <br><br>
+
+              <br><br>
+              <input type="submit" value="Create Document" onClick="checkCat()" id="button">
+             </form>
+
+        </div>
+    </div>
+<% } else if (title == 'Delete Document') { %>
+     
+<% } else if (title == 'Update Document') { %>
+    <div class="col-sm-8">    
+        <div class=>
+            <form action="/document/<%= document.id %>/update" method="post">
+              Subject<br>
+              <input type="text" id="button" name="subject" value="<%= document.subject %>">
+              <br><br/>
+              Description:<br>
+              <textarea type="text" id="button" rows="4" cols="50" name="description" value="<%= document.description %>"></textarea>
+              <br><br>
+              Status:<br>
+              <input type="text" id="button" name="status" value="<%= document.status %>">
+              <br/><br/>
+              Category:<br>
+                <select name = "category_id" id="button">
+                    <% categories.forEach(function(category) { %>
+                    <option  value="<%= category.id %>"><%= category.name %></option>  
+                <br/>
+                <% }); %>
+                </select>
+              <br><br>
+              <input type="submit" id="button" value="Update Document" onClick="checkCat()">
+            </form>
+        </div>
+    </div>
+<% } else if (title == 'Document Details') { %>
+    <div class="col-sm-8">    
+        <div class="">
+        
+            <h1>Document Details - <%= document.subject %>  </h1>
+            <p>I am a document for this ID = <%= document.id %></p>
+            <p>Subject: <%= document.subject %></p>
+            <p>Description:  <%= document.description %></p>
+            <p>Status:  <%= document.status %></p>
+            <p>
+            <b>Documented by Employee: </b> <%= document.Employee.first_name %> <%= document.Employee.last_name %> <br/>
+            <b>Inside Categories:</b> <% document.categories.forEach(function(category) { %>  <a href="/category/<%= category.id %>/"> <%= category.name %> </a>  <% }); %>
+            </p>
+            <a href="/document/<%= document.id %>/update">Edit  Document</a> | <a href="/document/<%= document.id %>/delete">Delete Document</a>
+
+        <% if(document.Comments.length == 0) { %>
+            <h2>There are no comments for this document yet </h2>
+        <% } else { %>
+            <h2>All Comments on this Documentation</h2>
+            <div class="">
+                <ol>
+                <% document.Comments.forEach(function(comment) { %>
+                        <li>
+                            <p><%= comment.comment_body %>
+                                --- <a href="/comment/<%= comment.id %>/update">Edit  Comment</a> | <a href="/comment/<%= comment.id %>/delete">Delete Comment</a>
+                            </p>
+                        </li>
+                    <br/>
+                <% }); %>
+                </ol>
+            </div>    
+         <% } %>   
+        <!--Form to post comment-->
+        <h1>POST A NEW COMMENT </h1>
+        <form action="/comment/create" method="post">
+              Comment Title:<br>
+              <input type="text" id="button" name="comment_title" placeholder="Comment Title">
+              <br><br>
+              Comment Body:<br>
+              <input type="text" id="button" name="comment_body" placeholder="Comment Body">
+              <br><br>
+              <input type="hidden" name="document_id" value="<%= document.id %>">
+              <input type="submit" id="button" value="Create Comment">
+        </form>
+        </div>
+    </div>
+<% } else if (title == 'Document List') { %>
+    <div class="col-sm-8">    
+        <div class="">
+            <ol>
+            <% documents.forEach(function(document) { %>
+                    <li>
+                        <h4><a href="/document/<%= document.id %>"><%= document.subject %></a></h4>
+                        <p>The description of the document <%= document.description %> <br/>
+                        <b>Documented by Employee: </b> <%= document.Employee.first_name %> <%= document.Employee.last_name %> <br/>
+                         <!--Category: DISPLAY CATEGORY HERE -->
+                         <b>Inside Categories: </b> <% document.categories.forEach(function(category) { %>  <a href="/category/<%= category.id %>/"> <%= category.name %> </a>  <% }); %>
+                        </p>
+                         <a href="/document/<%= document.id %>/update">Edit  Document</a> | <a href="/document/<%= document.id %>/delete">Delete Document</a>
+                    </li>
+                <br/>
+            <% }); %>
+            </ol>
+        </div>
+        <a href="/document/create"> CLICK HERE TO CREATE A DOCUMENT</a>
+    </div>
+<% } else { %>
+
+<% } %>
+<!--DOCUMENT VIEW END HERE-->
+<script>
+    function checkCat() {
+    var checkBoxes = document.getElementsByClassName( 'categoryCheckbox' );
+    var isChecked = false;
+    for (var i = 0; i < checkBoxes.length; i++) {
+        if ( checkBoxes[i].checked ) {
+            isChecked = true;
+        };
+    };
+    if ( isChecked ) {
+        
+        } else {
+            alert( 'Please, check at least one checkbox!' );
+        }   
+}
+</script>
