@@ -1,7 +1,7 @@
 <!--EMPLOYEE VIEW STARTS HERE -->
 <!--complete logic for employee view-->
 <% if (title == 'Create Employee') { %>
-    <div class="col-sm-8" id="button" >
+    <div class="col-sm-8">
         <div>
             <form action="" method="post">
               First Name:<br>
@@ -17,7 +17,14 @@
               <input type="text" id="button" name="email" placeholder="email@email.com">
               <br>
               Password:<br>
-              <input type="text" id="button" name="password" placeholder="password">
+              <input type="text" id="button" name="password" placeholder="Password">
+              <br>
+              Role:<br>
+              <input type="text" id="button" name="role" placeholder="E.g Manager, Editor">
+              <br>
+              Department:<br>
+              <input type="text" id="button" name="department" placeholder="E.g Engineering, Admin">
+              <br>
               <br><br>
               <input type="submit" id="button" value="Create Employee">
             </form>
@@ -38,6 +45,13 @@
               <br>
               Username:<br>
               <input type="text" id="button" name="username" value="<%= employee.username %>">
+              <br>
+              Role:<br>
+              <input type="text" id="button" name="role" value="<%= employee.role %>">
+              <br>
+              Department:<br>
+              <input type="text" id="button" name="department" value="<%= employee.department %>">
+              
               <br><br>
               <input type="submit" id="button" value="Update Employee">
             </form>
@@ -51,6 +65,8 @@
              <p>I am an employee with this ID = <%= employee.id %></p>
              <p>First Name: <%= employee.first_name %></p>
              <p>Last Name:  <%= employee.last_name %></p>
+             <p>Role:  <%= employee.role %></p>
+             <p>Department:  <%= employee.department %></p>
              <a href="/employee/<%= employee.id %>/update">Edit  Employee</a> | <a href="/employee/<%= employee.id %>/delete">Delete Employee</a>
              
         <% if(employee.Documents.length == 0) { %>
@@ -118,7 +134,7 @@
                 <% }); %>
                 </select>
               <br><br>
-                <input type="submit" id="button" value="Create Document" onClick="checkCat()">
+                <input type="submit" id="button" value="Create Document">
                 </form>
     </div>
 
@@ -133,6 +149,8 @@
                         <p><%= employee.last_name %></p>
                         <p><%= employee.username %></p>
                         <p><%= employee.email %></p>
+                        <p><%= employee.role %></p>
+                        <p><%= employee.department %></p>
                          <a href="/employee/<%= employee.id %>/update">Edit  Employee</a> | <a href="/employee/<%= employee.id %>/delete">Delete Employee</a>
                     </li>
                 <br/>
@@ -145,19 +163,3 @@
 
 <% } %>
 <!--EMPLOYEE VIEW END HERE-->
-<script>
-    function checkCat() {
-    var checkBoxes = document.getElementsByClassName( 'categoryCheckbox' );
-    var isChecked = false;
-    for (var i = 0; i < checkBoxes.length; i++) {
-        if ( checkBoxes[i].checked ) {
-            isChecked = true;
-        };
-    };
-    if ( isChecked ) {
-        
-        } else {
-            alert( 'Please, check at least one checkbox!' );
-        }   
-}
-</script>

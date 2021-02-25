@@ -32,6 +32,18 @@ module.exports = (sequelize, DataTypes) => {
                 max: 18,
                 min: 7,
             }},
+        role: {
+            type: DataTypes.STRING,
+            allowNull: false,
+            validate: {
+                isAlpha: true
+            }},
+        department: {
+            type: DataTypes.STRING,
+            allowNull: false,
+            validate: {
+                isAlpha: true
+            }},    
     });
 
 
@@ -39,9 +51,10 @@ module.exports = (sequelize, DataTypes) => {
 // Association between employee and document
   // an employeee can have many documents
   Employee.associate = function(models) {
+   
     models.Employee.hasMany(models.Document);
-  };
+ };
 
+ return Employee;
 
-    return Employee;
 };

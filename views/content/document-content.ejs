@@ -33,7 +33,7 @@
                 <input type="radio"  name="type_id" value="<%= type.id %>"> <%= type.type_name %>
                 <br/>
                <% }); %>
-            <br><br>
+            <br>
             Category:<br>
                 <select name = "category_id" id="button">
                     <% categories.forEach(function(category) { %>
@@ -42,9 +42,7 @@
                 <% }); %>
                 </select>
               <br><br>
-
-              <br><br>
-              <input type="submit" value="Create Document" onClick="checkCat()" id="button">
+              <input type="submit" value="Create Document" id="button">
              </form>
 
         </div>
@@ -72,7 +70,7 @@
                 <% }); %>
                 </select>
               <br><br>
-              <input type="submit" id="button" value="Update Document" onClick="checkCat()">
+              <input type="submit" id="button" value="Update Document">
             </form>
         </div>
     </div>
@@ -129,7 +127,7 @@
             <% documents.forEach(function(document) { %>
                     <li>
                         <h4><a href="/document/<%= document.id %>"><%= document.subject %></a></h4>
-                        <p>The description of the document <%= document.description %> <br/>
+                        <p>The description of the document: <%= document.description %> <br/>
                         <b>Documented by Employee: </b> <%= document.Employee.first_name %> <%= document.Employee.last_name %> <br/>
                          <!--Category: DISPLAY CATEGORY HERE -->
                          <b>Inside Categories: </b> <% document.categories.forEach(function(category) { %>  <a href="/category/<%= category.id %>/"> <%= category.name %> </a>  <% }); %>
@@ -145,20 +143,3 @@
 <% } else { %>
 
 <% } %>
-<!--DOCUMENT VIEW END HERE-->
-<script>
-    function checkCat() {
-    var checkBoxes = document.getElementsByClassName( 'categoryCheckbox' );
-    var isChecked = false;
-    for (var i = 0; i < checkBoxes.length; i++) {
-        if ( checkBoxes[i].checked ) {
-            isChecked = true;
-        };
-    };
-    if ( isChecked ) {
-        
-        } else {
-            alert( 'Please, check at least one checkbox!' );
-        }   
-}
-</script>

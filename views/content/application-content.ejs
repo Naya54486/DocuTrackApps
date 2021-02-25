@@ -85,7 +85,7 @@
                 <% }); %>
                 </select>
                 <br><br>
-                <input type="submit" id="button" value="Create Document" onClick="checkCat()">
+                <input type="submit" id="button" value="Create Document">
                 </form>
     </div>
 
@@ -109,19 +109,3 @@
 
 <% } %>
 <!--APP VIEW END HERE-->
-<script>
-    function checkCat() {
-    var checkBoxes = document.getElementsByClassName( 'categoryCheckbox' );
-    var isChecked = false;
-    for (var i = 0; i < checkBoxes.length; i++) {
-        if ( checkBoxes[i].checked ) {
-            isChecked = true;
-        };
-    };
-    if ( isChecked ) {
-        
-        } else {
-            alert( 'Please, check at least one checkbox!' );
-        }   
-}
-</script>

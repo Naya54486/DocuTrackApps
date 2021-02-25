@@ -26,6 +26,7 @@ exports.document_create_post = async function( req, res, next) {
             EmployeeId: req.body.employee_id,
             TypeId: req.body.type_id,
             ApplicationId:req.body.application_id
+
         } 
     );
     
@@ -36,34 +37,7 @@ exports.document_create_post = async function( req, res, next) {
     let categoryList = req.body.categories;
     
     // check the size of the category list
-    console.log(categoryList.length);
-    
-   
-    // I am checking if only 1 category has been selected
-    // if only one category then use the simple case scenario
-    if (categoryList.length == 1) {
-         // check if we have that category in our database
-         const category = await models.Category.findById(req.body.categories);
-         if (!category) {
-          return res.status(400);
-         }
-         //otherwise add new entry inside DocumentCategory table
-         await document.addCategory(category);
-    }
-    // Ok now lets do for more than 1 category, the hard bit.
-    // if more than one category has been selected
-    else {
-    // Loop through all the ids in req.body.categories i.e. the selected categories
-    await req.body.categories.forEach(async (id) => {
-        // check if all category selected are in the database
-        const category = await models.Category.findById(id);
-        if (!category) {
-          return res.status(400);
-        }
-        // add to DocumentCategory after
-        await document.addCategory(category);
-        });
-    }
+    console.log(categoryList);
     
     // everything done, now redirect....to document listing.
     res.redirect('/employee/' + employee_id);
@@ -157,35 +131,7 @@ exports.document_update_post = async function(req, res, next) {
         let categoryList = req.body.categories;
     
         // check the size of the category list
-        console.log(categoryList.length);
-    
-   
-        // I am checking if only 1 category has been selected
-        // if only one category then use the simple case scenario
-        if (categoryList.length == 1) {
-             // check if we have that category in our database
-             const category = await models.Category.findById(req.body.categories);
-             if (!category) {
-              return res.status(400);
-             }
-             //otherwise add new entry inside DocumentCategory table
-             await document.addCategory(category);
-        }
-        // Ok now lets do for more than 1 category, the hard bit.
-        // if more than one category has been selected
-        else {
-        // Loop through all the ids in req.body.categories i.e. the selected categories
-        await req.body.categories.forEach(async (id) => {
-            // check if all category selected are in the database
-            const category = await models.Category.findById(id);
-            if (!category) {
-              return res.status(400);
-            }
-            // add to DocumentCategory after
-            await document.addCategory(category);
-            });
-        }
-        
+        console.log(categoryList);
         // now update
         models.Document.update(
         // Values to update
