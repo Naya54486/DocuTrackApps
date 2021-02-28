@@ -2,6 +2,7 @@ var Document = require('../models/document');
 var models = require('../models');
 
 var async = require('async');
+const category = require('../models/category');
 
 // Display document create form on GET.
 exports.document_create_get = async function(req, res, next) {
@@ -37,8 +38,32 @@ exports.document_create_post = async function( req, res, next) {
     let categoryList = req.body.categories;
     
     // check the size of the category list
-    console.log(categoryList);
-    
+    console.log(categoryList.Length);
+
+
+    // If only 1 category has been selected
+    if (categoryList.length == 1) {
+      // check if we have that category in our database
+      const category = await models.Category.findById(req.body.categories);
+      if (!category) {
+       return res.status(400);
+      }
+      //otherwise add new entry inside DocumentCategory table
+      await document.addCategory(category);
+    }
+ // if more than one category has been selected
+    else {
+    // Loop through all the ids in req.body.categories i.e. the selected categories
+    await req.body.categories.forEach(async (id) => {
+     // check if all category selected are in the database
+      const category = await models.Category.findById(id);
+      if (!category) {
+       return res.status(400);
+      }
+     // add to DocumentCategory after
+      await document.addCategory(category);
+      });
+    }
     // everything done, now redirect....to document listing.
     res.redirect('/employee/' + employee_id);
 
@@ -116,92 +141,117 @@ exports.document_update_get = async function(req, res, next) {
 
 // Handle document update on POST.
 exports.document_update_post = async function(req, res, next) {
-        console.log("ID is " + req.params.document_id);
-        
-        // find the document
-        const document = await models.Document.findById(req.params.document_id);
-        
-        // Find and remove all associations 
-        const categories = await document.getCategories();
-        document.removeCategories(categories);
-        
+    console.log("ID is " + req.params.document_id);
+    
+    // find the document
+    const document = await models.Document.findById(req.params.document_id);
+    
+    // Find and remove all associations 
+    const categories = await document.getCategories();
+    document.removeCategories(categories);
+    
 
-        // const category = await models.Category.findById(req.body.category_id);
-    
-        let categoryList = req.body.categories;
-    
-        // check the size of the category list
-        console.log(categoryList);
-        // now update
-        models.Document.update(
-        // Values to update
-            {
-                subject: req.body.subject,
-                description: req.body.description,
-                status: req.body.status,
-            },
-          { // Clause
-                where: 
-                {
-                    id: req.params.document_id
-                }
-            }
-        //   returning: true, where: {id: req.params.document_id} 
-         ).then(function() { 
-                // If a document gets updated successfully, we just redirect to documents list
-                // no need to render a page
-                res.redirect("/documents");  
-                console.log("Document updated successfully");
-          });
+    // const category = await models.Category.findById(req.body.category_id);
+
+    let categoryList = req.body.categories;
+
+    // check the size of the category list
+    console.log(categoryList.Length);
+
+  // If only 1 category has been selected
+  if (categoryList.length == 1) {
+    // check if we have that category in our database
+    const category = await models.Category.findById(req.body.categories);
+    if (!category) {
+    return res.status(400);
+    }
+    //otherwise add new entry inside DocumentCategory table
+    await document.addCategory(category);
+  }
+  // if more than one category has been selected
+  else {
+  // Loop through all the ids in req.body.categories i.e. the selected categories
+  await req.body.categories.forEach(async (id) => {
+  // check if all category selected are in the database
+    const category = await models.Category.findById(id);
+    if (!category) {
+    return res.status(400);
+    }
+  // add to DocumentCategory after
+    await document.addCategory(category);
+    });
+  }
+
+  // now update
+  models.Document.update(
+  // Values to update
+      {
+          subject: req.body.subject,
+          description: req.body.description,
+          status: req.body.status,
+      },
+    { // Clause
+          where: 
+          {
+              id: req.params.document_id
+          }
+      }
+  //   returning: true, where: {id: req.params.document_id} 
+    ).then(function() { 
+          // If a document gets updated successfully, we just redirect to documents list
+          // no need to render a page
+          res.redirect("/documents");  
+          console.log("Document updated successfully");
+    });
 };
 
 
 // Display detail page for a specific document.
 exports.document_detail = function(req, res, next) {
-        // find a document by the Id
-        models.Document.findById(
-                req.params.document_id,
-                {
-                    // make sure include the comment so we can display it
-                    include: [
-                    {
-                      model: models.Comment
-                    },
-                    {
-                      model: models.Employee,
-                      attributes: ['id', 'first_name', 'last_name']
-                    },
-                    {
-                      model: models.Type,
-                      attributes: ['id', 'type_name']
-                    },
-                    {
-                      model: models.Application,
-                      attributes: ['id', 'app_type']
-                    },
-                    {
-                      model: models.Category,
-                      as: 'categories',
-                      required: false,
-                      // Pass in the Category attributes that you want to retrieve
-                      attributes: ['id', 'name'],
-                      through: {
-                        // This block of code allows you to retrieve the properties of the join table DocumentCategories
-                        model: models.DocumentCategories,
-                        as: 'documentCategories',
-                        attributes: ['document_id', 'category_id'],
-                      }
-                    }
-                    
-                    ]
-                    
-                }
-        ).then(function(document) {
-        console.log(document);
-        // renders an inividual document details page
-        res.render('pages/document_detail', { title: 'Document Details', document: document, layout: 'layouts/detail'} );
-        console.log("Document deteials renders successfully");
-        });
+  // find a document by the Id
+  models.Document.findById(
+      req.params.document_id,
+      {
+          // Include the comment so we can display it
+          include: [
+          {
+            model: models.Comment
+          },
+          {
+            model: models.Employee,
+            attributes: ['id', 'first_name', 'last_name']
+          },
+          {
+            model: models.Type,
+            attributes: ['id', 'type_name']
+          },
+          {
+            model: models.Application,
+            attributes: ['id', 'app_type']
+          },
+          {
+            model: models.Category,
+            as: 'categories',
+            required: false,
+            // Pass in the Category attributes that you want to retrieve
+            attributes: ['id', 'name'],
+            through: {
+              // This block of code allows you to retrieve the properties of the join table DocumentCategories
+              model: models.DocumentCategories,
+              as: 'documentCategories',
+              attributes: ['document_id', 'category_id'],
+            }
+          }
+          
+          ]
+          
+      }
+  ).then(function(document) {
+  console.log(document);
+  // renders an inividual document details page
+  res.render('pages/document_detail', { title: 'Document Details', document: document, category:category, layout: 'layouts/detail'} );
+  console.log("Document deteials renders successfully");
+  });
 };
 
 

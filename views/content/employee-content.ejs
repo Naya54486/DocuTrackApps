@@ -3,27 +3,37 @@
 <% if (title == 'Create Employee') { %>
     <div class="col-sm-8">
         <div>
+            <!-- error notice -->
+            <% if(typeof notice != "undefined") { %>
+                <div class="alert alert-danger alert-dismissable w-75 mx-auto">
+                    <button type="button" class="close" data-dismiss="alert">&times;</button>
+                <% notice.forEach((error) => { %>
+                    <strong><%= error.msg %></strong> <br>
+                <% }) %>
+                </div>
+            <% } %>
+
             <form action="" method="post">
               First Name:<br>
-              <input type="text" id="button" name="first_name" placeholder="First Name">
+              <input type="text" id="button" name="first_name" placeholder="First Name" value="<%= locals.first_name ? first_name : "" %>">
               <br>
               Last Name:<br>
-              <input type="text" id="button" name="last_name" placeholder="Last Name">
+              <input type="text" id="button" name="last_name" placeholder="Last Name" value="<%= locals.last_name ? last_name : "" %>">
               <br>
               Username:<br>
-              <input type="text" id="button" name="username" placeholder="Username">
+              <input type="text" id="button" name="username" placeholder="Username" value="<%= locals.username ? username : "" %>">
               <br>
               Email:<br>
-              <input type="text" id="button" name="email" placeholder="email@email.com">
+              <input type="text" id="button" name="email" placeholder="email@email.com" value="<%= locals.email ? email : "" %>">
               <br>
               Password:<br>
-              <input type="text" id="button" name="password" placeholder="Password">
+              <input type="text" id="button" name="password" placeholder="Password" value="<%= locals.password ? password : "" %>">
               <br>
               Role:<br>
-              <input type="text" id="button" name="role" placeholder="E.g Manager, Editor">
+              <input type="text" id="button" name="role" placeholder="E.g Manager, Editor" value="<%= locals.role ? role : "" %>">
               <br>
               Department:<br>
-              <input type="text" id="button" name="department" placeholder="E.g Engineering, Admin">
+              <input type="text" id="button" name="department" placeholder="E.g Engineering, Admin" value="<%= locals.department ? department : "" %>">
               <br>
               <br><br>
               <input type="submit" id="button" value="Create Employee">
@@ -127,14 +137,15 @@
                 <br><br>
                 <input type="hidden" id="button" name="employee_id" value="<%= employee.id %>">
                 Category:<br>
-                <select name = "category_id" id="button">
-                    <% categories.forEach(function(category) { %>
-                    <option  value="<%= category.id %>"><%= category.name %></option>  
+                <div>
+                     <% categories.forEach(function(category) { %>
+                    <input type="checkbox" class='categoryCheckbox' name="categories" id="<%= category.id %>" value="<%= category.id %>">
+                    <label for="<%= category.name %>"><%= category.name %></label>
                 <br/>
-                <% }); %>
-                </select>
+               <% }); %>
+                 </div>
               <br><br>
-                <input type="submit" id="button" value="Create Document">
+                <input type="submit" id="button" value="Create Document" onclick="checkCat()">
                 </form>
     </div>
 
@@ -145,7 +156,13 @@
             <% employees.forEach(function(employee) { %>
             <% console.log(employees) %>
                     <li>
+                         
+
+                        
                         <h4><a href="/employee/<%= employee.id %>"><%= employee.first_name %></a></h4>
+                         
+                        
+
                         <p><%= employee.last_name %></p>
                         <p><%= employee.username %></p>
                         <p><%= employee.email %></p>
@@ -163,3 +180,31 @@
 
 <% } %>
 <!--EMPLOYEE VIEW END HERE-->
+<!-- <script>
+    var link = null
+    function checkRole(employee) {
+        
+        if (employee.role === "Manager") {
+            link = `/employee/${employee.id}`
+        } else {
+            link = "#"
+        }
+    }
+</script> -->
+
+<script>
+    function checkCat() {
+    var checkBoxes = document.getElementsByClassName( 'categoryCheckbox' );
+    var isChecked = false;
+    for (var i = 0; i < checkBoxes.length; i++) {
+        if ( checkBoxes[i].checked ) {
+            isChecked = true;
+        };
+    };
+    if ( isChecked ) {
+        
+        } else {
+            alert( 'Please, check at least one checkbox!' );
+        }   
+}
+</script>

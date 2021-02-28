@@ -1,6 +1,12 @@
 var Employee = require('../models/employee');
 var models = require('../models');
 
+var express = require('express');
+var app = express();
+const bodyParser = require('body-parser');
+const { check, validationResult } = require("express-validator");
+const urlencodedParser = bodyParser.urlencoded({extended: false});
+
 var async = require('async');
 
 // Display employe create form on GET.
@@ -10,11 +16,44 @@ exports.employee_create_get = async function(req, res, next) {
 };
 
 // Handle employee create on POST.
-exports.employee_create_post = async function(req, res, next) {
-     // create employee POST controller logic here
-     // If an employee gets created successfully, we just redirect to employees list
-     // no need to render a page
-      models.Employee.create({
+exports.employee_create_post = [ urlencodedParser,
+  [
+    check('first_name', "The first name must be 4 characters long").exists().isAlpha()
+    .isLength({min: 4}),
+    check('last_name', "The last name must be 4 characters long").exists().isAlpha()
+    .isLength({min: 4}),
+    check('username', "The username must be 4 characters long").exists()
+    .isLength({min: 4}),
+    check('email', "Email is not valid").isEmail().normalizeEmail(),
+    check('password', "Password must be alphanumeric and also more than 7 characters").isAlphanumeric()
+    .isLength({min: 7}),
+    check('role', "Enter a valid role").exists(),
+    check('department', "Enter a valid department").exists(),
+
+
+  ],
+ async (req, res, next) => {
+
+  const errors = validationResult(req);
+
+  if (!errors.isEmpty()) {
+    const notice = errors.array();
+    res.render('forms/employee_form', {
+      title: 'Create Employee',
+      first_name: req.body.first_name, notice,
+      last_name: req.body.last_name,
+      username: req.body.username,
+      email: req.body.email,
+      password: req.body.password,
+      role: req.body.role,
+      department: req.body.department,
+      layout: 'layouts/detail'
+    });
+    
+  } else {
+
+    models.Employee.create({
+
             first_name: req.body.first_name,
             last_name: req.body.last_name,
             username: req.body.username,
@@ -23,11 +62,15 @@ exports.employee_create_post = async function(req, res, next) {
             role:req.body.role,
             department:req.body.department,
         }).then(function() {
+
             console.log("Employee created successfully");
-           // check if there was an error during post creation
+          // check if there was an error during post creation
             res.redirect('/employees');
       });
-};
+    }
+    }
+];  
+
 
 // Display employee delete form on GET.
 exports.employee_delete_get = function(req, res, next) {
@@ -124,3 +167,5 @@ exports.employee_detail = async function(req, res, next) {
   console.log("employee deteials renders successfully");
   });
 };
+
+
