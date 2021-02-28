@@ -69,6 +69,7 @@
     </div>
 
 <% } else if (title == 'Employee Details') { %>
+    <% if (employee.role === "Manager") { %>
     <div class="col-sm-8">
         <div class="">
              <h1>Details of a Single Employee</h1>
@@ -79,74 +80,79 @@
              <p>Department:  <%= employee.department %></p>
              <a href="/employee/<%= employee.id %>/update">Edit  Employee</a> | <a href="/employee/<%= employee.id %>/delete">Delete Employee</a>
              
-        <% if(employee.Documents.length == 0) { %>
-            <h2>There are no documents by this employee yet </h2>
-        <% } else { %>
-            <h2>All Documents by this Employee</h2>
-            <div class="">
-                <ol>
-                <% employee.Documents.forEach(function(document) { %>
-                        <li>
-                            <p> 
-                                <a href="/document/<%= document.id %>"><%= document.subject %></a>
-                                    <br/>
-                                <%= document.description %>
-                                    <br/>
-                                <%= document.status %>
-                                <br/> <a href="/document/<%= document.id %>/update">Edit  Document</a> | <a href="/document/<%= document.id %>/delete">Delete Document</a>
-                            </p>
-                        </li>
+           
+
+            <% if(employee.Documents.length == 0) { %>
+                <h2>There are no documents by this employee yet </h2>
+            <% } else { %>
+                <h2>All Documents by this Employee</h2>
+                <div class="">
+                    <ol>
+                    <% employee.Documents.forEach(function(document) { %>
+                            <li>
+                                <p> 
+                                    <a href="/document/<%= document.id %>"><%= document.subject %></a>
+                                        <br/>
+                                    <%= document.description %>
+                                        <br/>
+                                    <%= document.status %>
+                                    <br/> <a href="/document/<%= document.id %>/update">Edit  Document</a> | <a href="/document/<%= document.id %>/delete">Delete Document</a>
+                                </p>
+                            </li>
+                        <br/>
+                    <% }); %>
+                    </ol>
+                </div>    
+                <% } %>   
+            </div>
+            
+            <h2>Create new document for this employee </h2>
+            <!--DISPLAY CREATE FORM IN EMPLOYEE-->
+            
+            <!--YOU CAN ALSO MOVE THIS TO ANY ROUTE IF YOU WANT-->
+            
+            <form action="/document/create" method="post">
+                    Subject:<br>
+                    <input type="text" id="button" name="subject" placeholder="Subject">
+                    <br><br/>
+                    Description:<br>
+                    <textarea type="text" id="button" rows="4" cols="50" name="description" placeholder="Description"></textarea>
+                    <br><br>
+                    Status:<br>
+                    <input type="text" id="button" name="status" placeholder="status">
+                    <br><br>
+                    
+                    <!--I DONT NEED TO LIST EMPLOYEES AGAIN - BECAUSE I AM ON A SINGLE EMPLOYEE PAGE, I WILL -->
+                    <!--PASS THE EMPLOYEE ID AUTOMATICALLY WITH FORM INPUTS USING THE HIDDEN FIELD -->
+                    <!--Employee:<br>-->
+                    <!-- <select name = "employee_id">-->
+                    <!--      <#% employees.forEach(function(employee) { %>-->
+                    <!--      <option  value="<#%= employee.id %>"><#%= employee.first_name %></option>-->
+                    <!--  <br/>-->
+                    <!-- <#% }); %>-->
+                    <!--  </select>-->
+                    Type:<br>
+                    <% types.forEach(function(type) { %>
+                    <input type="radio" id="button" name="type_id" value="<%= type.id %>"> <%= type.type_name %>
                     <br/>
                 <% }); %>
-                </ol>
-            </div>    
-            <% } %>   
-        </div>
-        
-        <h2>Create new document for this employee </h2>
-        <!--DISPLAY CREATE FORM IN EMPLOYEE-->
-        
-        <!--YOU CAN ALSO MOVE THIS TO ANY ROUTE IF YOU WANT-->
-        
-        <form action="/document/create" method="post">
-                Subject:<br>
-                <input type="text" id="button" name="subject" placeholder="Subject">
-                <br><br/>
-                Description:<br>
-                <textarea type="text" id="button" rows="4" cols="50" name="description" placeholder="Description"></textarea>
+                    </select>
+                    <br><br>
+                    <input type="hidden" id="button" name="employee_id" value="<%= employee.id %>">
+                    Category:<br>
+                    <div>
+                        <% categories.forEach(function(category) { %>
+                        <input type="checkbox" class='categoryCheckbox' name="categories" id="<%= category.id %>" value="<%= category.id %>">
+                        <label for="<%= category.name %>"><%= category.name %></label>
+                    <br/>
+                <% }); %>
+                    </div>
                 <br><br>
-                Status:<br>
-                <input type="text" id="button" name="status" placeholder="status">
-                <br><br>
-                
-                <!--I DONT NEED TO LIST EMPLOYEES AGAIN - BECAUSE I AM ON A SINGLE EMPLOYEE PAGE, I WILL -->
-                <!--PASS THE EMPLOYEE ID AUTOMATICALLY WITH FORM INPUTS USING THE HIDDEN FIELD -->
-                <!--Employee:<br>-->
-                <!-- <select name = "employee_id">-->
-                <!--      <#% employees.forEach(function(employee) { %>-->
-                <!--      <option  value="<#%= employee.id %>"><#%= employee.first_name %></option>-->
-                <!--  <br/>-->
-                <!-- <#% }); %>-->
-                <!--  </select>-->
-                Type:<br>
-                <% types.forEach(function(type) { %>
-                <input type="radio" id="button" name="type_id" value="<%= type.id %>"> <%= type.type_name %>
-                <br/>
-               <% }); %>
-                </select>
-                <br><br>
-                <input type="hidden" id="button" name="employee_id" value="<%= employee.id %>">
-                Category:<br>
-                <div>
-                     <% categories.forEach(function(category) { %>
-                    <input type="checkbox" class='categoryCheckbox' name="categories" id="<%= category.id %>" value="<%= category.id %>">
-                    <label for="<%= category.name %>"><%= category.name %></label>
-                <br/>
-               <% }); %>
-                 </div>
-              <br><br>
-                <input type="submit" id="button" value="Create Document" onclick="checkCat()">
-                </form>
+                    <input type="submit" id="button" value="Create Document" onclick="checkCat()">
+                    </form>
+    <% } else { %>
+
+    <% } %>            
     </div>
 
 <% } else if (title == 'Employee List') { %>

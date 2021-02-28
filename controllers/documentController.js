@@ -315,6 +315,10 @@ exports.index = function(req, res) {
       models.Category.findAndCountAll(
       ).then(function(categoryCount)
       {
+      models.Application.findAndCountAll(
+      ).then(function(applicationCount)
+      {
+      
         // find the count of employees in database
  
         // find the count of comments in database
@@ -327,12 +331,14 @@ exports.index = function(req, res) {
             employeeCount: employeeCount,
             commentCount: commentCount,
             categoryCount: categoryCount,
+            applicationCount: applicationCount,
             layout: 'layouts/main'
             
         });
         
         // res.render('pages/index_list_sample', { title: 'Document Details', layout: 'layouts/list'});
         // res.render('pages/index_detail_sample', { page: 'Home' , title: 'Document Details', layout: 'layouts/detail'});
+      });
       });
       });
       });
